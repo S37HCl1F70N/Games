@@ -31,14 +31,90 @@
             color: var(--crt-text-color);
             font-family: 'VT323', monospace;
             display: flex;
+            flex-direction: column; /* Changed for header */
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             font-size: 1.2rem;
             text-shadow: 0 0 3px var(--crt-shadow-color);
             overflow: hidden;
-            padding: 1rem;
+            padding-top: 60px; /* Space for header */
         }
+        
+        /* --- New Header & Nav Menu --- */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 1rem;
+            background-color: #000000cc;
+            border-bottom: 2px solid var(--crt-border-color);
+            z-index: 60;
+        }
+
+        .site-title {
+            color: var(--crt-accent-color);
+            font-size: 1.5rem;
+            text-shadow: 0 0 5px var(--crt-accent-color);
+        }
+        
+        .hamburger-menu {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            z-index: 71; /* Above nav panel */
+        }
+        
+        .hamburger-menu .bar {
+            display: block;
+            width: 30px;
+            height: 3px;
+            margin: 6px auto;
+            background-color: var(--crt-text-color);
+            transition: 0.4s;
+        }
+
+        .nav-menu {
+            position: fixed;
+            left: -100%;
+            top: 0;
+            width: 300px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            background-color: var(--crt-bg-color);
+            border-right: 2px solid var(--crt-border-color);
+            transition: left 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 70;
+        }
+
+        .nav-menu.open {
+            left: 0;
+        }
+
+        .nav-menu a {
+            color: var(--crt-text-color);
+            text-decoration: none;
+            font-size: 1.5rem;
+            padding: 0.5rem 1rem;
+            transition: color 0.2s;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--crt-accent-color);
+            text-shadow: 0 0 5px var(--crt-accent-color);
+        }
+
 
         .scanline {
             position: fixed;
@@ -78,6 +154,7 @@
             box-shadow: 0 0 15px var(--crt-border-color);
             position: relative;
             z-index: 1;
+            margin: 1rem;
         }
 
         header {
@@ -237,7 +314,7 @@
             top: 0;
             right: -100%;
             width: 100%;
-            max-width: 450px;
+            max-width: 550px; /* Increased width for table */
             height: 100%;
             background-color: var(--crt-bg-color);
             border-left: 2px solid var(--crt-border-color);
@@ -252,12 +329,50 @@
         #close-tips-button { position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; padding: 0.2rem 0.8rem; }
         #tips-panel h2 { color: var(--crt-accent-color); margin-bottom: 1.5rem; }
         #tips-panel h3 { margin-top: 1.5rem; margin-bottom: 0.5rem; border-bottom: 1px solid var(--crt-border-color); }
-        #tips-panel ul { list-style-type: none; padding-left: 1rem; }
-        #tips-panel li { margin-bottom: 0.5rem; position: relative; }
-        #tips-panel li::before { content: '>'; position: absolute; left: -1rem; }
+        
+        /* Strategy Table Styles */
+        .strategy-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+        .strategy-table th, .strategy-table td {
+            border: 1px solid var(--crt-border-color);
+            padding: 0.3rem;
+            text-align: center;
+        }
+        .strategy-table th {
+            background-color: var(--crt-border-color);
+        }
+        .strategy-table td.player-hand {
+            background-color: #00ff0022;
+            font-weight: bold;
+        }
+        .strat-H { background-color: #ff000080; color: white; } /* Hit */
+        .strat-S { background-color: #00800080; color: white; } /* Stand */
+        .strat-D { background-color: #ffbf0080; color: black; } /* Double */
+        .strat-P { background-color: #00ffff80; color: black; } /* Split */
+
     </style>
 </head>
-<body>  
+<body>
+    <header class="top-bar">
+        <div class="hamburger-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <h1 class="site-title">// W.O.P.R. LOBBY //</h1>
+        <nav class="nav-menu">
+            <a href="#">🏠 Dashboard</a>
+            <a href="#">🌩️ Radar</a>
+            <a href="#">🧩 Sudoku</a>
+            <a href="#">🧩 Tic-Tac-Toe</a>
+            <a href="#">🧩 HoldEm</a>
+        </nav>
+    </header>
+    
     <div class="crt-overlay"></div>
     <div class="scanline"></div>
 
@@ -305,25 +420,70 @@
     <div id="tips-panel">
         <button id="close-tips-button">X</button>
         <h2>// BLACKJACK STRATEGY_BRIEFING.TXT //</h2>
-        <h3>CASINO RULES:</h3>
+        <p>Dealer stands on all 17s. Double after split is allowed.</p>
+        
+        <h3>KEY:</h3>
         <ul>
-            <li><strong>Decks:</strong> 6 decks are used (shuffled each hand).</li>
-            <li><strong>Blackjack:</strong> Pays 3-to-2.</li>
-            <li><strong>Splitting:</strong> Allowed on any pair. Double After Split (DAS) is allowed.</li>
-            <li><strong>Dealer:</strong> Stands on ALL 17s (hard and soft).</li>
+            <li><span class="strat-H" style="padding: 2px 5px;">H</span> = Hit</li>
+            <li><span class="strat-S" style="padding: 2px 5px;">S</span> = Stand</li>
+            <li><span class="strat-D" style="padding: 2px 5px;">D</span> = Double</li>
+            <li><span class="strat-P" style="padding: 2px 5px;">P</span> = Split</li>
         </ul>
-        <h3>BASIC STRATEGY:</h3>
-        <!-- ... strategy content ... -->
-         <h4>Pairs:</h4>
-         <ul>
-             <li><strong>Aces & 8s:</strong> Always SPLIT.</li>
-             <li><strong>10s & 5s:</strong> Never SPLIT.</li>
-             <li><strong>9s:</strong> SPLIT vs Dealer 2-6 & 8-9. STAND otherwise.</li>
-             <li><strong>7s:</strong> SPLIT vs Dealer 2-7. HIT otherwise.</li>
-             <li><strong>6s:</strong> SPLIT vs Dealer 2-6. HIT otherwise.</li>
-             <li><strong>4s:</strong> SPLIT vs Dealer 5-6. HIT otherwise.</li>
-             <li><strong>2s & 3s:</strong> SPLIT vs Dealer 2-7. HIT otherwise.</li>
-         </ul>
+
+        <h3>Hard Totals</h3>
+        <table class="strategy-table">
+            <thead>
+                <tr><th>Player</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>A</th></tr>
+            </thead>
+            <tbody>
+                <tr><td class="player-hand">17-20</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td></tr>
+                <tr><td class="player-hand">16</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td></tr>
+                <tr><td class="player-hand">15</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td></tr>
+                <tr><td class="player-hand">14</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td></tr>
+                <tr><td class="player-hand">13</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td></tr>
+                <tr><td class="player-hand">12</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td></tr>
+                <tr><td class="player-hand">11</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td></tr>
+                <tr><td class="player-hand">10</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-H">H</td><td class="strat-H">H</td></tr>
+                <tr><td class="player-hand">9</td><td class="strat-H">H</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td></tr>
+                <tr><td class="player-hand">5-8</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Soft Totals</h3>
+        <table class="strategy-table">
+             <thead>
+                <tr><th>Player</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>A</th></tr>
+            </thead>
+            <tbody>
+                <tr><td class="player-hand">A,9</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td></tr>
+                <tr><td class="player-hand">A,8</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-D">D</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td></tr>
+                <tr><td class="player-hand">A,7</td><td class="strat-S">S</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td></tr>
+                <tr><td class="player-hand">A,6</td><td class="strat-H">H</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td></tr>
+                <tr><td class="player-hand">A,5</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td></tr>
+                <tr><td class="player-hand">A,4</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td></tr>
+                <tr><td class="player-hand">A,3</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td></tr>
+                <tr><td class="player-hand">A,2</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Pairs</h3>
+        <table class="strategy-table">
+             <thead>
+                <tr><th>Player</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>A</th></tr>
+            </thead>
+            <tbody>
+                <tr><td class="player-hand">A,A</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td></tr>
+                <tr><td class="player-hand">10,10</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td><td class="strat-S">S</td></tr>
+                <tr><td class="player-hand">9,9</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-S">S</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-S">S</td><td class="strat-S">S</td></tr>
+                <tr><td class="player-hand">8,8</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td></tr>
+                <tr><td class="player-hand">7,7</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td></tr>
+                <tr><td class="player-hand">6,6</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td></tr>
+                <tr><td class="player-hand">5,5</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-D">D</td><td class="strat-H">H</td><td class="strat-H">H</td></tr>
+                <tr><td class="player-hand">4,4</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td></tr>
+                <tr><td class="player-hand">3,3</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td></tr>
+                <tr><td class="player-hand">2,2</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-P">P</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td><td class="strat-H">H</td></tr>
+            </tbody>
+        </table>
     </div>
 
     <script>
@@ -347,6 +507,9 @@
             const tipsToggleButton = document.getElementById('tips-toggle-button');
             const closeTipsButton = document.getElementById('close-tips-button');
             const tipsPanel = document.getElementById('tips-panel');
+
+            const hamburgerMenu = document.querySelector('.hamburger-menu');
+            const navMenu = document.querySelector('.nav-menu');
 
             // --- Game State ---
             let playerBank = 1000;
@@ -457,6 +620,7 @@
                 bettingControls.classList.add('hidden');
                 actionControls.classList.remove('hidden');
                 splitButton.classList.add('hidden');
+                hitButton.disabled = false;
 
                 createAndShuffleDeck();
                 playerHands = [[deck.pop(), deck.pop()]];
@@ -524,15 +688,15 @@
                 playerHands.forEach((hand, index) => {
                     const playerScore = getHandScore(hand);
                     const bet = playerBets[index];
-                    let handMsg = `HAND ${index + 1}: `;
+                    let handMsg = playerHands.length > 1 ? `HAND ${index + 1}: ` : "";
                     
                     if (playerScore > 21) {
                         handMsg += "BUST. ";
                     } else if (dealerScore > 21 || playerScore > dealerScore) {
-                        handMsg += "WINS! ";
+                        handMsg += "PLAYER WINS! ";
                         playerBank += bet * 2;
                     } else if (playerScore < dealerScore) {
-                        handMsg += "LOSES. ";
+                        handMsg += "DEALER WINS. ";
                     } else {
                         handMsg += "PUSH. ";
                         playerBank += bet;
@@ -587,9 +751,13 @@
                     showMessage(`> NOW PLAYING HAND ${currentHandIndex + 1}...`);
                     doubleButton.disabled = false;
                     updateActiveHandUI();
-                    // Auto-play if split Aces
+                    // Auto-stand if split Aces
                     if (playerHands[currentHandIndex][0].rank === 'A') {
+                         hitButton.disabled = true;
+                         doubleButton.disabled = true;
                          setTimeout(playNextHand, 1000);
+                    } else {
+                         hitButton.disabled = false;
                     }
                 } else {
                     // All player hands are done
@@ -652,7 +820,6 @@
                 playerHands = [[handToSplit[0]], [handToSplit[1]]];
                 playerBets = [bet, bet];
                 
-                // Deal new cards
                 playerHands[0].push(deck.pop());
                 playerHands[1].push(deck.pop());
                 
@@ -661,7 +828,6 @@
                 renderAllHands();
                 updateActiveHandUI();
 
-                // Handle split Aces - only one card, then stand
                 if (playerHands[0][0].rank === 'A') {
                     hitButton.disabled = true;
                     doubleButton.disabled = true;
@@ -673,6 +839,8 @@
 
             tipsToggleButton.addEventListener('click', () => tipsPanel.classList.add('open'));
             closeTipsButton.addEventListener('click', () => tipsPanel.classList.remove('open'));
+            hamburgerMenu.addEventListener('click', () => navMenu.classList.toggle('open'));
+
             betAmountInput.addEventListener('input', () => {
                 if (parseInt(betAmountInput.value) > playerBank) betAmountInput.value = playerBank;
             });
